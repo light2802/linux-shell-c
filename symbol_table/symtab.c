@@ -43,11 +43,70 @@ symtab* new_symtab(int level)
     return table;
 }
 
-symtab* stack_push();
+void symtab_stack_add(symtab* table)
+{
+    stack.list[stack.symtab_count++]=table;
+    stack.local_symtab=table;
+}
 
-symtab* stack_push();
+symtab* stack_push()
+{
+    symtab* table=new_symtab(++symtab_level);
+    symtab_stack_add(table);
+    return table;
+}
 
-int rm_from_symtab(symtab_entry* entry, symtab* table);
+symtab* stack_pop()
+{
+    if(stack.symtab_count==0)
+        return NULL;
+    symtab* table=stack.list[stack.symtab_count-1];
+    stack.list[--stack.symtab_count]=NULL;
+    symtab_level--;
+
+    if(stack.symtab_count==0)
+    {
+        stack.local_symtab=NULL;
+        stack.global_symtab=NULL;
+    }
+    else
+        stack.local_symtab=stack.list[stack.symtab_count-1];
+    return table;
+
+}
+
+int rm_from_symtab(symtab_entry* entry, symtab* table)
+{
+    int res=0;
+    if(entry->value)
+        free(entry->value);
+    if(entry->func_body)
+        free_node_tree(entry->func_body);
+    free(entry->name);
+    if(table->first==entry)
+    {
+        table->first=table->first->next;
+        if(table->last==entry)
+            table->last=NULL;
+        res=1;
+    }
+    else
+    {
+        symtab_entry* e=table->first, *p=NULL;
+        while(e && e!=entry)
+        {
+            p=e;
+            e=e->next;
+        }
+        if(e==entry)
+        {
+            p->next=entry->next;
+            res=1;
+        }
+    }
+    free(entry);
+    return res;
+}
 
 symtab_entry* add_to_symtab(char* symbol)
 {
@@ -90,17 +149,75 @@ symtab_entry* add_to_symtab(char* symbol)
     return entry;
 }
 
-symtab_entry* do_lookup(char* str, symtab* table);
+symtab_entry* do_lookup(char* str, symtab* table)
+{
+    if(!str || !table)
+        return NULL;
+    symtab_entry* entry=table->first;
+    while(entry)
+    {
+        if(!strcmp(entry->name,str))
+            return entry;
+        entry=entry->next;
+    }
+    return NULL;
+}
 
-symtab_entry* get_symtab_entry(char* str);
+symtab_entry* get_symtab_entry(char* str)
+{
+    int i=stack.symtab_count-1;
+    do
+    {
+        symtab* tab=stack.list[i];
+        symtab_entry* entry=do_lookup(str,tab);
+        if(entry)
+            return entry;
+    }while(--i>=0);
+    return NULL;
+}
 
-symtab* get_local();
+symtab* get_local_symatab()
+{
+    return stack.local_symtab;
+}
 
-symtab* get_global();
+symtab* get_global()
+{
+    return stack.global_symtab;
+}
 
-symtab_stack* get_symtab_stack();
+symtab_stack* get_symtab_stack()
+{
+    return &stack;
+}
 
-void symtab_entry_setval(symtab_entry* entry, char* val);
+void symtab_entry_setval(symtab_entry* entry, char* val)
+{
+    if(entry->value)
+    {
+        free(entry->value);
+    }
+
+    if(!val)
+    {
+        entry->value = NULL;
+    }
+    else
+    {
+        char *val2 = malloc(strlen(val)+1);
+
+        if(val2)
+        {
+            strcpy(val2, val);
+        }
+        else
+        {
+            fprintf(stderr, "error: no memory for symbol table entry's value\n");
+        }
+
+        entry->value = val2;
+    }
+}
 
 void dump_local_symtab()
 {

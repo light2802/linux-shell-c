@@ -8,8 +8,8 @@
 
 enum symbol_type_e      //the type of a symbol table entry's value
 {
-    SYM STR ,
-    SYM FUNC ,
+    SYM_STR ,
+    SYM_FUNC ,
 };
 
 typedef struct symtab_entry_s       //symbol table entry structure
@@ -38,13 +38,13 @@ typedef struct symtab_stack_s       //symbol table stack structure
 void init_symtab();
 symtab* new_symtab(int level);
 symtab* stack_push();
-symtab* stack_push();
+symtab* stack_pop();
 int rm_from_symtab(symtab_entry* entry, symtab* table);
 symtab_entry* add_to_symtab(char* symbol);
 symtab_entry* do_lookup(char* str, symtab* table);
 symtab_entry* get_symtab_entry(char* str);
-symtab* get_local();
-symtab* get_global();
+symtab* get_local_symatab();
+symtab* get_global_symatab();
 symtab_stack* get_symtab_stack();
 void symtab_entry_setval(symtab_entry* entry, char* val);
 void dump_local_symtab();
