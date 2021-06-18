@@ -14,7 +14,7 @@ enum symbol_type_e      //the type of a symbol table entry's value
 
 typedef struct symtab_entry_s       //symbol table entry structure
 {
-    char name;
+    char* name;
     enum symbol_type_e type;
     char* value;
     unsigned int flags;

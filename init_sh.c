@@ -2,19 +2,20 @@
 #include "shell.h"
 #include "symbol_table/symtab.h"
 
-extern char** env;
+extern char** environ;
 
 void init_shell()
 {
     init_symtab();
     symtab_entry* entry;
-    char** p2=env;
+    char** p2=environ;
     while(*p2)
     {
         char* eq=strchr(*p2, '=');
         if(eq)
         {
-            int len=eq=(*p2);
+            int len;
+            eq=(*p2);
             char name[len+1];
             strncpy(name, *p2, len);
             name[len]='\0';

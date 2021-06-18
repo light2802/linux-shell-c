@@ -20,6 +20,6 @@ int parse_and_exec(source* src);
 
 int dump(int argc, char **argv);        //shell builtin utilities
 
-extern utility builtins[];      //list of builtin utilities
-extern int utilities_count;     //and their count
+extern utility utils[];      //list of builtin utilities
+extern int utils_count;     //and their count
 #endif //shell_h_INCLUDED
