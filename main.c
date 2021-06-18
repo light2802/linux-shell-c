@@ -85,6 +85,7 @@ int parse_and_exec(source* src)
 int main(int argc, char **argv)
 {
     char* cmnd;
+    init_shell();
     do{
         print_prompt1();
         cmnd = read_cmnd();

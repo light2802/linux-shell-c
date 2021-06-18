@@ -17,7 +17,7 @@ typedef struct symtab_entry_s       //symbol table entry structure
     char name;
     enum symbol_type_e type;
     char* value;
-    unsigned int size;
+    unsigned int flags;
     struct symtab_entry_s* next;
     node* func_body;
 } symtab_entry;
