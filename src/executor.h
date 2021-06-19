@@ -1,0 +1,10 @@
+#ifndef executor_h_INCLUDED
+#define executor_h_INCLUDED
+
+#include "node.h"
+
+char *search_path(char *file);
+int do_exec_cmd(int argc, char **argv);
+int do_simple_command(struct node_s *node);
+
+#endif

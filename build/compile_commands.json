@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/home/light/Desktop/linux-shell-c/build",
-  "command": "/bin/x86_64-linux-gnu-gcc-9   -g   -o CMakeFiles/shell.dir/main.c.o   -c /home/light/Desktop/linux-shell-c/build/main.c",
-  "file": "/home/light/Desktop/linux-shell-c/build/main.c"
-}
-]
